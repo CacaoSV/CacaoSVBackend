@@ -39,5 +39,4 @@ extension ProfileTypePivot: Migration {
             builder.reference(from: \.profileTypeId, to:\ProfileType.id)
         }
     }
-    
 }

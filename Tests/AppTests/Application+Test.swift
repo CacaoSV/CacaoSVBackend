@@ -12,8 +12,11 @@ extension Application {
     
     struct EmptyContent: Content {}
     
-    static func testableWithRevertedMigrations() throws -> Application {
-        return try testable(arguments:  ["vapor", "revert", "--all", "-y"])
+    static func reset() throws  {
+        let revertEnvironment = ["vapor", "revert", "--all", "-y"]
+        try Application.testable(arguments: revertEnvironment).asyncRun().wait()
+        let migrateEnvironment = ["vapor", "migrate", "-y"]
+        try Application.testable(arguments: migrateEnvironment).asyncRun().wait()
     }
     
     static func testable(arguments: [String] = []) throws -> Application {
@@ -26,7 +29,6 @@ extension Application {
         try App.boot(app)
         return app
     }
-    
     
     func sendRequest<T: Content>(to path: String, method: HTTPMethod, headers: HTTPHeaders = HTTPHeaders(), body: T? = nil) throws -> Response {
         let responder = try self.make(Responder.self)

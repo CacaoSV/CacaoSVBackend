@@ -32,7 +32,7 @@ public func testConfigure(_ config: inout Config,
     
   
     let postgres = PostgreSQLDatabaseConfig(hostname: Environment.get("TEST_POSTGRES_HOST") ?? "localhost",
-                                            port: Int(Environment.get("TEST_POSTGRES_PORT") ?? "") ?? 5433,
+                                            port: Int(Environment.get("TEST_POSTGRES_PORT") ?? "") ?? 5432,
                                             username: Environment.get("TEST_POSTGRES_USER") ?? "test",
                                             database: Environment.get("TEST_POSTGRES_DATABASE") ?? "CacaoSVTest",
                                             password: Environment.get("TEST_POSTGRES_PASSWORD"))
@@ -51,15 +51,18 @@ public func testConfigure(_ config: inout Config,
     migrations.add(model: Profile.self, database: .psql)
     migrations.add(model: ProfileTypePivot.self, database: .psql)
     migrations.add(model: Talk.self, database: .psql)
-
-    /// Seeds
     
+    /// Seeds
     migrations.add(migration: MeetupStatusSeed.self, database: .psql)
     migrations.add(migration: MeetupSeed.self, database: .psql)
     migrations.add(migration: ProfileTypeSeed.self, database: .psql)
     migrations.add(migration: ProfileSeed.self, database: .psql)
     migrations.add(migration: ProfileTypePivotSeed.self, database: .psql)
     migrations.add(migration: TalkSeed.self, database: .psql)
+    
+    var commandConfig = CommandConfig.default()
+    commandConfig.useFluentCommands()
+    services.register(commandConfig)
     
     services.register(migrations)
 }
