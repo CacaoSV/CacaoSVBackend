@@ -15,14 +15,14 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Checking files 
-          command: ls
-      - run:
           name: Building 
           command: swift build
       - run:
           name: Testing
           command: swift test
+      - run: 
+          name: Compile code with optimizations
+          command: swift build -c release
 
 workflows:
   version: 2
